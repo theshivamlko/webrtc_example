@@ -21,9 +21,24 @@ myVideoContainer.addEventListener('click', (event) => {
         myVideoElement.play();
 
 
+        const webrtcConfig ={
+            iceServers: [
+                {
+                    urls: ['stun:stun.l.google.com:19302'],
+                },
+                {
+                    urls: ['iphone-stun.strato-iphone.de:3478'],
+                }
+            ]
+        }
         // #1 Implementing WebRTC
-        pc = new RTCPeerConnection()
+        pc = new RTCPeerConnection(webrtcConfig)
         console.debug('getDisplayMedia() Created RTCPeerConnection ', pc);
+
+
+        pc.onnegotiationneeded = event => handleNegotiationNeeded(event);
+
+
 
         pc.addEventListener("icegatheringstatechange", (event) => {
 
@@ -40,14 +55,8 @@ myVideoContainer.addEventListener('click', (event) => {
         tracks.forEach((track) => {
             pc.addTrack(track);
             console.debug('addTrack', track);
-
         })
 
-        const offer = pc.createOffer()
-
-        offer.then(offer => createOffer(offer,pc)).catch(error => {
-            console.error("Offer Error", error);
-        })
 
 
     }).catch(error => {
@@ -92,37 +101,46 @@ function readOfferSdp(offer) {
     return sdpLines.join("\n")
 }
 
-async function createOffer(offer,pc) {
+async function createOffer(offer, pc) {
     console.debug("Offer Created", offer);
 
- /*    Experiment
-    const newSDP = readOfferSdp(offer);
-    await pc.setLocalDescription(new RTCPeerConnection({
-        type:"offer",
-        sdp:newSDP
-    }))
-    */
+    /*    Experiment
+       const newSDP = readOfferSdp(offer);
+       await pc.setLocalDescription(new RTCPeerConnection({
+           type:"offer",
+           sdp:newSDP
+       }))
+       */
 
-    pc.setLocalDescription(offer)
+    await pc.setLocalDescription(offer)
 
     // Getting stats related to media track at our pc
     let stats = await pc.getStats()
 
-    stats.forEach( report =>{
-        console.log("stats:",report)
+    stats.forEach(report => {
+        console.log("stats:", report)
     })
 
 
     pc.onicecandidate = (event) => {
-        console.debug("icecandidate RECEIVED:",event.candidate)
+        console.debug("icecandidate RECEIVED:", event.candidate)
 
-        if (event.candidate === null){
-            console.debug("icecandidate Gathering:",pc.iceGatheringState)
+        if (event.candidate === null) {
+            console.debug("icecandidate Gathering:", pc.iceGatheringState)
         }
     }
 
 
+}
 
+/** @param {Event} event */
+function handleNegotiationNeeded(event){
+
+    const offer = pc.createOffer()
+
+    offer.then(offer => createOffer(offer, pc)).catch(error => {
+        console.error("Offer Error", error);
+    })
 
 
 }
