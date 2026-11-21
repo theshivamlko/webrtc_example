@@ -1,5 +1,4 @@
 import * as state from "./states.js"
-import {createRoom} from "./ajaxUtils.js";
 
 const landingPageContainer = document.getElementById('landing_page_container');
 const header = document.getElementById('header');

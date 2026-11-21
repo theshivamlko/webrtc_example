@@ -2,7 +2,6 @@ import http from "http";
 import express from "express";
 import * as constants from "./src/constants.js";
 import {setupWebSocket} from "./src/websocket.js";
-import {type} from "./src/constants.js";
 
 
 const PORT = process.env.PORT || 8080
@@ -26,7 +25,7 @@ app.post("/createRoom", (req, res) => {
     if (existingRoom) {
         const failMessage = {
             data: {
-                type: type.ROOM_CHECK.RESPONSE_FAILURE,
+                type: constants.type.ROOM_CHECK.RESPONSE_FAILURE,
                 message: "Room already created",
             }
         }
@@ -43,7 +42,7 @@ app.post("/createRoom", (req, res) => {
         console.log("Room Create, add to array", constants.rooms)
         res.status(200).json({
             data: {
-                type: type.ROOM_CHECK.RESPONSE_SUCCESS,
+                type: constants.type.ROOM_CHECK.RESPONSE_SUCCESS,
 
             }
         })
@@ -66,7 +65,7 @@ app.post("/destroyRoom", (req, res) => {
     if (destroyRoomIndex === -1) {
         const failMessage = {
             data: {
-                type: type.ROOM_DESTROY.RESPONSE_FAILURE,
+                type: constants.type.ROOM_DESTROY.RESPONSE_FAILURE,
                 message: "Room not found",
             }
         }
@@ -74,12 +73,13 @@ app.post("/destroyRoom", (req, res) => {
         res.status(400).json(failMessage)
 
     } else {
-        constants.rooms.slice(destroyRoomIndex, 1);
+        constants.rooms.splice(destroyRoomIndex, 1);
         console.log("Room Deleted, from array", constants.rooms)
+
 
         res.status(200).json({
             data: {
-                type: type.ROOM_DESTROY.RESPONSE_SUCCESS,
+                type: constants.type.ROOM_DESTROY.RESPONSE_SUCCESS,
                 message: "Room Deleted",
 
             }

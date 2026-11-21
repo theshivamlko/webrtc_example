@@ -1,4 +1,5 @@
 import {WebSocketServer} from "ws";
+import {rooms} from "./constants.js";
 
 const connections = [];
 
@@ -25,6 +26,22 @@ function handleConnection(ws, request) {
         const index = connections.findIndex((connection) => connection.ws === ws);
         if (index !== -1) connections.splice(index, 1);
         console.log(`Server WebSocket disconnected: ${userId}`);
+
+        rooms.forEach((room) => {
+            if (room.peer1 === userId) {
+                room.peer1 = null
+            } else if (room.peer2 === userId) {
+                room.peer2 = null
+            }
+            if (room.peer1 === null || room.peer2 === null) {
+                const roomIndex = rooms.findIndex((r) => r.roomName === room.roomName);
+                if (roomIndex !== -1) {
+                    rooms.splice(roomIndex, 1);
+                    console.log(`Server WebSocket Room ${room.roomName} removed`);
+                }
+            }
+        })
+
     });
 
     ws.on("error", (error) => {
@@ -40,3 +57,5 @@ export function setupWebSocket(server) {
 
     return webSocketServer;
 }
+
+

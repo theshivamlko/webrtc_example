@@ -41,7 +41,7 @@ export async function createRoom(roomName, userId) {
 }
 
 
-export async function destroyRoom(roomName, userId) {
+export async function destroyRoom(roomName) {
 
     try {
         const response = await fetch("/destroyRoom", {

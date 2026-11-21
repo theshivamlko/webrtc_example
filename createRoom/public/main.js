@@ -1,6 +1,5 @@
 import * as uiUtils from './modules/uiUtils.js';
 import * as appWS from './modules/clientWebsocket.js';
-import {setupAppWebSocket} from "./modules/clientWebsocket.js";
 import {logToConsole} from "./modules/uiUtils.js";
 import * as ajaxUtils from "./modules/ajaxUtils.js";
 import * as state from "./modules/states.js";
@@ -34,7 +33,7 @@ uiUtils.DOM.createRoomButton.onclick = (e) => {
 
 }
 
-uiUtils.DOM.destroyButton.onclick = (e) => {
+uiUtils.DOM.destroyButton.onclick =async (e) => {
     const roomName = state.getState().roomName
 
     if(!roomName) {
@@ -44,7 +43,8 @@ uiUtils.DOM.destroyButton.onclick = (e) => {
 
     logToConsole(`Deleting ${roomName} ...`)
 
-    ajaxUtils.destroyRoom(roomName)
+    await ajaxUtils.destroyRoom(roomName)
+    wsClient.close();
 
 
 }
