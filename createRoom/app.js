@@ -53,6 +53,43 @@ app.post("/createRoom", (req, res) => {
 
 })
 
+app.post("/destroyRoom", (req, res) => {
+    const body = req.body;
+
+    const destroyRoom = req.body["roomName"];
+    console.log("/destroyRoom data", body)
+    const destroyRoomIndex = constants.rooms.findIndex(room => {
+        return room.roomName === destroyRoom;
+    })
+    console.log("/destroyRoom existingRoom", destroyRoom)
+
+    if (destroyRoomIndex === -1) {
+        const failMessage = {
+            data: {
+                type: type.ROOM_DESTROY.RESPONSE_FAILURE,
+                message: "Room not found",
+            }
+        }
+
+        res.status(400).json(failMessage)
+
+    } else {
+        constants.rooms.slice(destroyRoomIndex, 1);
+        console.log("Room Deleted, from array", constants.rooms)
+
+        res.status(200).json({
+            data: {
+                type: type.ROOM_DESTROY.RESPONSE_SUCCESS,
+                message: "Room Deleted",
+
+            }
+        })
+
+
+    }
+
+})
+
 
 app.get("/secret", (req, res) => {
     res.send("<h2>hi</h2>")

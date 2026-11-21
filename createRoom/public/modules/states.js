@@ -38,3 +38,10 @@ export const setWSocket = (ws) => {
 export const getState = () => {
     return state
 }
+export const resetState = () => {
+    return {
+        userId: null,
+        ws: null,
+        roomName: null
+    };
+}

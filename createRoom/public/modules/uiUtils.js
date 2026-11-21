@@ -151,6 +151,11 @@ inputRoomChannelName.addEventListener('keypress', (event) => {
     }
 })
 
-function listenRoomEnter() {
+export function exitRoom() {
+
+    landingPageContainer.style.display = "block";
+    roomInterface.classList.add("hide")
+    roomNameHeadingTag.textContent = ``
+    state.resetState()
 
 }

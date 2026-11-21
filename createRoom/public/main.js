@@ -3,6 +3,7 @@ import * as appWS from './modules/clientWebsocket.js';
 import {setupAppWebSocket} from "./modules/clientWebsocket.js";
 import {logToConsole} from "./modules/uiUtils.js";
 import * as ajaxUtils from "./modules/ajaxUtils.js";
+import * as state from "./modules/states.js";
 
 
 const userId = Math.round(Math.random()* 1000000)
@@ -29,6 +30,21 @@ uiUtils.DOM.createRoomButton.onclick = (e) => {
     logToConsole(`Checking if ${roomName} is available...`)
 
     ajaxUtils.createRoom(roomName,userId)
+
+
+}
+
+uiUtils.DOM.destroyButton.onclick = (e) => {
+    const roomName = state.getState().roomName
+
+    if(!roomName) {
+        alert("Room not found");
+        return;
+    }
+
+    logToConsole(`Deleting ${roomName} ...`)
+
+    ajaxUtils.destroyRoom(roomName)
 
 
 }
