@@ -1,1 +1,3 @@
 .idea
+/createRoom/node_modules/
+/createRoom/package-lock.json
