@@ -49,8 +49,8 @@ export function initializeUI(userId) {
 
 
 function openModel() {
- infoModalContentContainer.classList.add("show")
- infoModalContentContainer.classList.remove("hide")
+    infoModalContentContainer.classList.add("show")
+    infoModalContentContainer.classList.remove("hide")
 }
 
 function closeModelButton() {
@@ -64,7 +64,7 @@ function setupModalEvents() {
     closeButton.onclick = closeModelButton
 
     window.onclick = function (event) {
-        if (event.target === infoModalContentContainer){
+        if (event.target === infoModalContentContainer) {
             closeModelButton()
         }
     }
@@ -72,9 +72,27 @@ function setupModalEvents() {
 }
 
 
+export function logToConsole(message, color = "#FFFFFF", highlight = false,
+                             highlightColor = "#FFFF83") {
 
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('console-message');
 
+    messageElement.textContent = message;
+    messageElement.style.color = color;
 
+    if (highlight) {
+        messageElement.style.backgroundColor = highlightColor;
+        messageElement.style.fontWeight = "bold";
+        messageElement.style.padding = "8x";
+        messageElement.style.borderRadius = "4x";
+        messageElement.style.transition = "background-color 0.5s ease";
+    }
+
+    consoleDisplay.appendChild(messageElement);
+    consoleDisplay.scrollTop = messageElement.scrollHeight; // scroll to bottom
+
+}
 
 
 

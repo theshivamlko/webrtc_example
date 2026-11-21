@@ -1,5 +1,6 @@
 let state = {
-    userId: null
+    userId: null,
+    ws: null
 };
 
 const setState = (newState) => {
@@ -15,6 +16,13 @@ export const setUserId = (userId) => {
 
     setState({
         userId: userId
+    })
+
+}
+export const setWSocket = (ws) => {
+
+    setState({
+        ws: ws
     })
 
 }
