@@ -1,6 +1,7 @@
 let state = {
     userId: null,
-    ws: null
+    ws: null,
+    roomName: null
 };
 
 const setState = (newState) => {
@@ -19,10 +20,21 @@ export const setUserId = (userId) => {
     })
 
 }
+export const setRoomName = (roomName) => {
+
+    setState({
+        roomName: roomName
+    })
+
+}
 export const setWSocket = (ws) => {
 
     setState({
         ws: ws
     })
 
+}
+
+export const getState = () => {
+    return state
 }

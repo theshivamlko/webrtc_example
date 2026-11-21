@@ -11,11 +11,11 @@ export function setupAppWebSocket(wsClient) {
     });
 
     wsClient.addEventListener("close", (event) => {
-        logToConsole(`Disconnected from the server (${event.code})`, theme.orange);
+        logToConsole(`Disconnected from the server ⛔ (${event.code})`, theme.orange);
     });
 
     wsClient.addEventListener("error", (event) => {
         console.error("WebSocket connection error:", event);
-        logToConsole("WebSocket connection failed", theme.red);
+        logToConsole("WebSocket connection failed ❌", theme.red);
     });
 }

@@ -38,6 +38,45 @@ const consoleWrapper = document.getElementById('console_wrapper');
 const sessionIdDisplay = document.getElementById('session_id_display');
 const consoleDisplay = document.getElementById('console_display');
 
+export const DOM = {
+    landingPageContainer,
+    header,
+    enterRoomWrapper,
+    inputRoomChannelName,
+    createRoomButton,
+    joinButton,
+    infoModalButton,
+    infoModalContentContainer,
+    modalContent,
+    closeButton,
+    roomInterface,
+    roomNameHeadingTag,
+    destroyButton,
+    exitButton,
+    messages,
+    messageInput,
+    messageInputField,
+    sendMessageButton,
+    offerorProcessButtons,
+    createPcButton,
+    addDataTypeButton,
+    createOfferButton,
+    updateLocalDescriptionButton,
+    sendOfferButton,
+    iceOfferorButton,
+    setRemoteDescriptionButton,
+    offereeProcessButtons,
+    offereeCreatePcButton,
+    offereeAddDataTypeButton,
+    offereeUpdateRemoteDescriptionButton,
+    offereeCreateAnswerButton,
+    offereeUpdateLocalDescriptionButton,
+    offereeSendAnswerButton,
+    iceOffereeButton,
+    consoleWrapper,
+    sessionIdDisplay,
+    consoleDisplay,
+};
 
 export function initializeUI(userId) {
     sessionIdDisplay.innerHTML = `Session Id: ${userId}`;
@@ -94,7 +133,13 @@ export function logToConsole(message, color = "#FFFFFF", highlight = false,
 
 }
 
+export  function creatorToProceedToRoom(){
 
+    landingPageContainer.style.display = "none";
+    exitButton.classList.add("hide")
+    roomInterface.classList.remove("hide")
+    roomNameHeadingTag.textContent =`You are in room ${state.getState().roomName}`
 
+}
 
 

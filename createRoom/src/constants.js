@@ -1,0 +1,9 @@
+export const type ={
+    ROOM_CHECK:{
+        RESPONSE_FAILURE:"CHECK_ROOM_RESPONSE_FAILURE",
+        RESPONSE_SUCCESS:"CHECK_ROOM_RESPONSE_SUCCESS"
+    }
+}
+
+
+export const rooms = []

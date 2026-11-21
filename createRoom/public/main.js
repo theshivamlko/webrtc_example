@@ -1,6 +1,8 @@
 import * as uiUtils from './modules/uiUtils.js';
-import * as appWS from './modules/appwebsocket.js';
-import {setupAppWebSocket} from "./modules/appwebsocket.js";
+import * as appWS from './modules/clientWebsocket.js';
+import {setupAppWebSocket} from "./modules/clientWebsocket.js";
+import {logToConsole} from "./modules/uiUtils.js";
+import * as ajaxUtils from "./modules/ajaxUtils.js";
 
 
 const userId = Math.round(Math.random()* 1000000)
@@ -14,3 +16,19 @@ const wsClient = new WebSocket(
 );
 
 appWS.setupAppWebSocket(wsClient)
+
+
+uiUtils.DOM.createRoomButton.onclick = (e) => {
+    const roomName = uiUtils.DOM.inputRoomChannelName.value;
+
+    if(!roomName) {
+        alert("Please enter a room name");
+        return;
+    }
+
+    logToConsole(`WS Server is checking ${roomName} is available`)
+
+    ajaxUtils.createRoom(roomName,userId)
+
+
+}
