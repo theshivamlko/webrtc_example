@@ -20,7 +20,7 @@ app.post("/createRoom", (req, res) => {
     const body = req.body;
     console.log("/createRoom data", body)
     const existingRoom = constants.rooms.find(room => {
-        room.roomName === body["roomName"];
+        return room.roomName === body["roomName"];
     })
     console.log("/createRoom existingRoom", existingRoom)
     if (existingRoom) {
@@ -40,6 +40,7 @@ app.post("/createRoom", (req, res) => {
             peer2: null,
 
         })
+        console.log("Room Create, add to array", constants.rooms)
         res.status(200).json({
             data: {
                 type: type.ROOM_CHECK.RESPONSE_SUCCESS,

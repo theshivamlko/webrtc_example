@@ -26,7 +26,7 @@ uiUtils.DOM.createRoomButton.onclick = (e) => {
         return;
     }
 
-    logToConsole(`WS Server is checking ${roomName} is available`)
+    logToConsole(`Checking if ${roomName} is available...`)
 
     ajaxUtils.createRoom(roomName,userId)
 

@@ -17,6 +17,7 @@ export async function createRoom(roomName, userId) {
         const body = await response.json();
 
         if (!response.ok) {
+            logToConsole(body.data?.message || `Room request failed (${response.status})`,appconstants.theme.red)
             throw new Error(body.data?.message || `Room request failed (${response.status})`);
         }
 
@@ -28,7 +29,7 @@ export async function createRoom(roomName, userId) {
             creatorToProceedToRoom()
 
         } else {
-            logToConsole(`Room not available ${roomName}`)
+            logToConsole(body.data.message,appconstants.theme.red)
         }
 
         return body.data;

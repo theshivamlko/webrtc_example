@@ -1,4 +1,5 @@
 import * as state from "./states.js"
+import {createRoom} from "./ajaxUtils.js";
 
 const landingPageContainer = document.getElementById('landing_page_container');
 const header = document.getElementById('header');
@@ -133,13 +134,23 @@ export function logToConsole(message, color = "#FFFFFF", highlight = false,
 
 }
 
-export  function creatorToProceedToRoom(){
+export function creatorToProceedToRoom() {
 
     landingPageContainer.style.display = "none";
     exitButton.classList.add("hide")
     roomInterface.classList.remove("hide")
-    roomNameHeadingTag.textContent =`You are in room ${state.getState().roomName}`
+    roomNameHeadingTag.textContent = `You are in room ${state.getState().roomName}`
 
 }
 
 
+inputRoomChannelName.addEventListener('keypress', (event) => {
+
+    if (event.key === "Enter") {
+        createRoomButton.click();
+    }
+})
+
+function listenRoomEnter() {
+
+}
