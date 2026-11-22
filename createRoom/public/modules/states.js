@@ -1,5 +1,6 @@
 let state = {
     userId: null,
+    otherUserId: null,
     ws: null,
     roomName: null
 };
@@ -17,6 +18,13 @@ export const setUserId = (userId) => {
 
     setState({
         userId: userId
+    })
+
+}
+export const setOtherUserId = (otherUserId) => {
+
+    setState({
+        otherUserId: otherUserId
     })
 
 }
@@ -40,8 +48,9 @@ export const getState = () => {
 }
 export const resetState = () => {
     return {
-        userId: null,
-        ws: null,
-        roomName: null
+        // userId: null,
+        // ws: null,
+        roomName: null,
+        otherUserId: null
     };
 }

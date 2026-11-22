@@ -1,5 +1,6 @@
 import * as state from "./states.js"
 
+
 const landingPageContainer = document.getElementById('landing_page_container');
 const header = document.getElementById('header');
 const enterRoomWrapper = document.getElementById('enter_room_wrapper');
@@ -157,4 +158,30 @@ export function exitRoom() {
     roomNameHeadingTag.textContent = ``
     state.resetState()
 
+}
+
+
+export function joineeToProceedToRoom() {
+
+    landingPageContainer.style.display = "none";
+    exitButton.classList.remove("hide")
+    destroyButton.classList.add("hide")
+    roomNameHeadingTag.textContent = `You are in room ${state.getState().roomName}`
+    messages.innerHTML ="Please wait ... connecting via webrtc"
+
+}
+
+
+export function updateCreatorRoom() {
+    destroyButton.classList.add("hide")
+    exitButton.classList.remove("hide")
+    messages.innerHTML ="Please wait ... connecting via webrtc"
+
+}
+
+export function updateUiForRemainingUser() {
+
+    alert("A User has left the room")
+    state.setOtherUserId(null)
+    messages.innerHTML = "Waiting for peer to join"
 }

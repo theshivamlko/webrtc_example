@@ -100,3 +100,4 @@ app.get("/secret", (req, res) => {
 server.listen(PORT, () => {
     console.log(`Server started at http://localhost:${PORT}`)
 })
+

@@ -5,7 +5,7 @@ import * as ajaxUtils from "./modules/ajaxUtils.js";
 import * as state from "./modules/states.js";
 
 
-const userId = Math.round(Math.random()* 1000000)
+const userId = Math.round(Math.random() * 1000000)
 
 uiUtils.initializeUI(userId)
 
@@ -21,22 +21,22 @@ appWS.setupAppWebSocket(wsClient)
 uiUtils.DOM.createRoomButton.onclick = (e) => {
     const roomName = uiUtils.DOM.inputRoomChannelName.value;
 
-    if(!roomName) {
+    if (!roomName) {
         alert("Please enter a room name");
         return;
     }
 
     logToConsole(`Checking if ${roomName} is available...`)
 
-    ajaxUtils.createRoom(roomName,userId)
+    ajaxUtils.createRoom(roomName, userId)
 
 
 }
 
-uiUtils.DOM.destroyButton.onclick =async (e) => {
+uiUtils.DOM.destroyButton.onclick = async (e) => {
     const roomName = state.getState().roomName
 
-    if(!roomName) {
+    if (!roomName) {
         alert("Room not found");
         return;
     }
@@ -46,5 +46,32 @@ uiUtils.DOM.destroyButton.onclick =async (e) => {
     await ajaxUtils.destroyRoom(roomName)
     wsClient.close();
 
+
+}
+
+
+uiUtils.DOM.joinButton.onclick = async (e) => {
+    const roomName = uiUtils.DOM.inputRoomChannelName.value;
+
+
+    if (!roomName) {
+        alert("Room not found to Join");
+        return;
+    }
+
+    appWS.joinRoom(roomName, userId,wsClient)
+
+}
+
+
+uiUtils.DOM.exitButton.onclick = async (e) => {
+
+    const roomName = state.getState().roomName;
+
+    uiUtils.exitRoom()
+
+    appWS.exitRoom(roomName, userId);
+
+    logToConsole(`You have left room ${roomName} ...`)
 
 }
