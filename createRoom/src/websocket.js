@@ -36,6 +36,18 @@ function handleConnection(ws, request) {
         console.log(`Server WebSocket disconnected: ${userId}`);
 
         constants.rooms.forEach((room) => {
+
+            const otherUserId = (room.peer1 === userId) ? room.peer2 : room.peer1;
+
+            const notificationMessage = {
+                label: constants.type.ROOM_EXIT.NOTIFY,
+                message: `User ${userId} is disconnected`,
+            }
+
+            if (otherUserId) {
+                sendSocketMessageToUser(otherUserId, notificationMessage)
+            }
+
             if (room.peer1 === userId) {
                 room.peer1 = null
             } else if (room.peer2 === userId) {
@@ -179,7 +191,7 @@ function exitRoomHandler(data) {
     const notificationMessage = {
         label: constants.labels.NORMAL_SERVER_PROCESS,
         data: {
-            type: constants.type.ROOM_EXIT.EXIT,
+            type: constants.type.ROOM_EXIT.NOTIFY,
             message: `User ${userId} has left`
         }
     }

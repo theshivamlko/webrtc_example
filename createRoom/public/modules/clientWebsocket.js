@@ -85,6 +85,7 @@ function joinSuccessHandler(data) {
 
 function joinNotificationHandler(data) {
     alert(`User ${data.joinUserId} has joined the room`)
+    state.setOtherUserId(data.creatorId)
     logToConsole(data.message, appconstants.theme.green);
     uiUtils.updateCreatorRoom()
 }
@@ -108,7 +109,10 @@ function normalServerProcessing(data) {
         case appconstants.type.ROOM_JOIN.NOTIFY:
             joinNotificationHandler(data);
             break;
-        case appconstants.type.ROOM_EXIT.EXIT:
+        case appconstants.type.ROOM_EXIT.NOTIFY:
+            exitNotificationHandler(data);
+            break;
+        case appconstants.type.ROOM_DESTROY.NOTIFY:
             exitNotificationHandler(data);
             break;
         default:

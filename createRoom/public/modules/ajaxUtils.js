@@ -21,7 +21,7 @@ export async function createRoom(roomName, userId) {
             throw new Error(body.data?.message || `Room request failed (${response.status})`);
         }
 
-        if (body.data.type === appconstants.type.ROOM_CHECK.RESPONSE_SUCCESS) {
+        if (body.data.type === appconstants.type.ROOM_CREATE.RESPONSE_SUCCESS) {
 
             state.setRoomName(roomName)
             logToConsole(`Room Created ${roomName}`,appconstants.theme.green)

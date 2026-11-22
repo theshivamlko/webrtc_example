@@ -25,7 +25,7 @@ app.post("/createRoom", (req, res) => {
     if (existingRoom) {
         const failMessage = {
             data: {
-                type: constants.type.ROOM_CHECK.RESPONSE_FAILURE,
+                type: constants.type.ROOM_CREATE.RESPONSE_FAILURE,
                 message: "Room already created",
             }
         }
@@ -42,7 +42,7 @@ app.post("/createRoom", (req, res) => {
         console.log("Room Create, add to array", constants.rooms)
         res.status(200).json({
             data: {
-                type: constants.type.ROOM_CHECK.RESPONSE_SUCCESS,
+                type: constants.type.ROOM_CREATE.RESPONSE_SUCCESS,
 
             }
         })
