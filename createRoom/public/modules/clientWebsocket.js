@@ -2,6 +2,8 @@ import {logToConsole} from "./uiUtils.js";
 import * as appconstants from "./appconstants.js";
 import * as state from "./states.js";
 import * as uiUtils from "./uiUtils.js";
+import * as app_webrtc from "./app_webrtc.js";
+import * as webRTCHandler from "./app_webrtc.js";
 
 
 function onHandleMessage(incomingData) {
@@ -11,6 +13,9 @@ function onHandleMessage(incomingData) {
     switch (msg.label) {
         case appconstants.labels.NORMAL_SERVER_PROCESS:
             normalServerProcessing(msg.data)
+            break;
+        case appconstants.labels.WEBRTC_PROCESS:
+            webRTCServerProcessing(msg.data);
             break;
         default:
             console.log(`Unknown server processing label`);
@@ -81,6 +86,8 @@ function joinSuccessHandler(data) {
     state.setRoomName(data.roomName);
 
     uiUtils.joineeToProceedToRoom();
+    app_webrtc.startWebRTCProcess()
+
 }
 
 function joinNotificationHandler(data) {
@@ -93,6 +100,8 @@ function joinNotificationHandler(data) {
 function exitNotificationHandler(data) {
     logToConsole(data.message, appconstants.theme.red);
     uiUtils.updateUiForRemainingUser()
+    webRTCHandler.closePeerConnection();
+
 }
 
 function normalServerProcessing(data) {
@@ -121,3 +130,61 @@ function normalServerProcessing(data) {
     }
 }
 
+export function sendOffer(offer) {
+    const message = {
+        label: appconstants.labels.WEBRTC_PROCESS,
+        data: {
+            type: appconstants.type.WEBRTC_OFFER,
+            offer,
+            otherUserId: state.getState().otherUserId
+        }
+    };
+    state.getState().ws.send(JSON.stringify(message));
+};
+
+function webRTCServerProcessing(data) {
+    // Process the message based on the type of response
+    switch(data.type) {
+        // offer received
+        // steps 11 and 12 (reference the md file)
+        case appconstants.type.WEBRTC_OFFER:
+            webRTCHandler.handleOffer(data);
+            break;
+        // answer received
+        // steps 24 (reference the md file)
+        case appconstants.type.WEBRTC_ANSWER:
+            webRTCHandler.handleAnswer(data);
+            break;
+        // ice candidates received
+        // steps 24 (reference the md file)
+        case appconstants.type.WEBRTC_ICE_CANDIDATES:
+            webRTCHandler.handleIceCandidates(data);
+            break;
+        default:
+            console.log("Unknown data type: ", data.type);
+    }
+};
+
+export function sendAnswer(answer) {
+    const message = {
+        label: appconstants.labels.WEBRTC_PROCESS,
+        data: {
+            type: appconstants.type.WEBRTC_ANSWER,
+            answer,
+            otherUserId: state.getState().otherUserId
+        }
+    };
+    state.getState().ws.send(JSON.stringify(message));
+};
+
+export function sendIceCandidates(arrayOfIceCandidates) {
+    const message = {
+        label: appconstants.labels.WEBRTC_PROCESS,
+        data: {
+            type: appconstants.type.WEBRTC_ICE_CANDIDATES,
+            candidatesArray: arrayOfIceCandidates,
+            otherUserId: state.getState().otherUserId
+        }
+    };
+    state.getState().ws.send(JSON.stringify(message));
+};

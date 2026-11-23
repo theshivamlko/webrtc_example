@@ -1,86 +1,85 @@
 import * as state from "./states.js"
+import * as appconstants from "./appconstants.js"
 
 
-const landingPageContainer = document.getElementById('landing_page_container');
-const header = document.getElementById('header');
-const enterRoomWrapper = document.getElementById('enter_room_wrapper');
-const inputRoomChannelName = document.getElementById('input_room_channel_name');
-const createRoomButton = document.getElementById('create_room_button');
-const joinButton = document.getElementById('join_button');
+// selecting DOM elements
+const user_session_id_element = document.getElementById("session_id_display");
 const infoModalButton = document.getElementById('info_modal_button');
-const infoModalContentContainer = document.getElementById('info_modal_content_container');
-const modalContent = document.getElementById('modal_content');
-const closeButton = document.getElementById('close');
-const roomInterface = document.getElementById('room_interface');
-const roomNameHeadingTag = document.getElementById('room_name_heading_tag');
-const destroyButton = document.getElementById('destroy_button');
-const exitButton = document.getElementById('exit_button');
-const messages = document.getElementById('messages');
-const messageInput = document.getElementById('message_input');
-const messageInputField = document.getElementById('message_input_field');
-const sendMessageButton = document.getElementById('send_message_button');
-const offerorProcessButtons = document.getElementById('offeror_process_buttons');
-const createPcButton = document.getElementById('create_pc');
-const addDataTypeButton = document.getElementById('add_data_type');
-const createOfferButton = document.getElementById('create_offer');
-const updateLocalDescriptionButton = document.getElementById('update_local_description');
-const sendOfferButton = document.getElementById('send_offer');
-const iceOfferorButton = document.getElementById('ice_offeror');
-const setRemoteDescriptionButton = document.getElementById('set_remote_description');
-const offereeProcessButtons = document.getElementById('offeree_process_buttons');
-const offereeCreatePcButton = document.getElementById('offeree_create_pc');
-const offereeAddDataTypeButton = document.getElementById('offeree_add_data_type');
-const offereeUpdateRemoteDescriptionButton = document.getElementById('offeree_update_remote_description');
-const offereeCreateAnswerButton = document.getElementById('offeree_create_answer');
-const offereeUpdateLocalDescriptionButton = document.getElementById('offeree_update_local_description');
-const offereeSendAnswerButton = document.getElementById('offeree_send_answer');
-const iceOffereeButton = document.getElementById('ice_offeree');
-const consoleWrapper = document.getElementById('console_wrapper');
-const sessionIdDisplay = document.getElementById('session_id_display');
+const infoModalContainer = document.getElementById('info_modal_content_container');
+const closeModalButton = document.getElementById('close');
 const consoleDisplay = document.getElementById('console_display');
+const inputRoomNameElement = document.getElementById('input_room_channel_name');
+const landingPageContainer = document.getElementById('landing_page_container');
+const joinRoomButton = document.getElementById('join_button');
+const createRoomButton = document.getElementById('create_room_button');
+const roomNameHeadingTag = document.getElementById('room_name_heading_tag');
+const roomInterface = document.getElementById('room_interface');
+const messagesContainer = document.getElementById('messages');
+const messageInputField = document.getElementById('message_input_field');
+const messageInputContainer = document.getElementById('message_input');
+const sendMessageButton = document.getElementById('send_message_button');
+const destroyRoomButton = document.getElementById('destroy_button');
+const exitButton = document.getElementById('exit_button');
+
+// learning purposes
+const offerorButtonsContainer = document.getElementById("offeror_process_buttons");
+const offerorCreatePcButton = document.getElementById("create_pc");
+const offerorAddDataTypeButton = document.getElementById("add_data_type");
+const offerorCreateOfferButton = document.getElementById("create_offer");
+const offerorSetLocalDescriptionButton = document.getElementById("update_local_description");
+const offerorSendOfferButton = document.getElementById("send_offer");
+const offerorIceButton = document.getElementById("ice_offeror");
+const offerorSetRemoteDescriptionButton = document.getElementById("set_remote_description");
+
+const offereeButtonsContainer = document.getElementById("offeree_process_buttons");
+const offereeCreatePcButton = document.getElementById("offeree_create_pc");
+const offereeAddDataTypeButton = document.getElementById("offeree_add_data_type");
+const offereeSetRemoteDescriptionButton = document.getElementById("offeree_update_remote_description");
+const offereeCreateAnswerButton = document.getElementById("offeree_create_answer");
+const offereeSetLocalDescriptionButton = document.getElementById("offeree_update_local_description");
+const offereeSendAnswerButton = document.getElementById("offeree_send_answer");
+const offereeIceButton = document.getElementById("ice_offeree");
 
 export const DOM = {
-    landingPageContainer,
-    header,
-    enterRoomWrapper,
-    inputRoomChannelName,
-    createRoomButton,
-    joinButton,
+    userSessionIdElement: user_session_id_element,
     infoModalButton,
-    infoModalContentContainer,
-    modalContent,
-    closeButton,
-    roomInterface,
+    infoModalContainer,
+    closeModalButton,
+    consoleDisplay,
+    inputRoomNameElement,
+    landingPageContainer,
+    joinRoomButton,
+    createRoomButton,
     roomNameHeadingTag,
-    destroyButton,
-    exitButton,
-    messages,
-    messageInput,
+    roomInterface,
+    messagesContainer,
     messageInputField,
+    messageInputContainer,
     sendMessageButton,
-    offerorProcessButtons,
-    createPcButton,
-    addDataTypeButton,
-    createOfferButton,
-    updateLocalDescriptionButton,
-    sendOfferButton,
-    iceOfferorButton,
-    setRemoteDescriptionButton,
-    offereeProcessButtons,
+    destroyRoomButton,
+    exitButton,
+
+    // learning purposes
+    offerorButtonsContainer,
+    offerorCreatePcButton,
+    offerorAddDataTypeButton,
+    offerorCreateOfferButton,
+    offerorSetLocalDescriptionButton,
+    offerorSendOfferButton,
+    offerorIceButton,
+    offerorSetRemoteDescriptionButton,
+
+    offereeButtonsContainer,
     offereeCreatePcButton,
     offereeAddDataTypeButton,
-    offereeUpdateRemoteDescriptionButton,
+    offereeSetRemoteDescriptionButton,
     offereeCreateAnswerButton,
-    offereeUpdateLocalDescriptionButton,
+    offereeSetLocalDescriptionButton,
     offereeSendAnswerButton,
-    iceOffereeButton,
-    consoleWrapper,
-    sessionIdDisplay,
-    consoleDisplay,
+    offereeIceButton,
 };
-
 export function initializeUI(userId) {
-    sessionIdDisplay.innerHTML = `Session Id: ${userId}`;
+    user_session_id_element.innerHTML = `Session Id: ${userId}`;
     state.setUserId(userId)
 
     setupModalEvents()
@@ -89,22 +88,22 @@ export function initializeUI(userId) {
 
 
 function openModel() {
-    infoModalContentContainer.classList.add("show")
-    infoModalContentContainer.classList.remove("hide")
+    infoModalContainer.classList.add("show")
+    infoModalContainer.classList.remove("hide")
 }
 
 function closeModelButton() {
-    infoModalContentContainer.classList.add("hide")
-    infoModalContentContainer.classList.remove("show")
+    infoModalContainer.classList.add("hide")
+    infoModalContainer.classList.remove("show")
 }
 
 function setupModalEvents() {
 
     infoModalButton.onclick = openModel
-    closeButton.onclick = closeModelButton
+    closeModalButton.onclick = closeModelButton
 
     window.onclick = function (event) {
-        if (event.target === infoModalContentContainer) {
+        if (event.target === infoModalContainer) {
             closeModelButton()
         }
     }
@@ -144,7 +143,7 @@ export function creatorToProceedToRoom() {
 }
 
 
-inputRoomChannelName.addEventListener('keypress', (event) => {
+inputRoomNameElement.addEventListener('keypress', (event) => {
 
     if (event.key === "Enter") {
         createRoomButton.click();
@@ -163,25 +162,91 @@ export function exitRoom() {
 
 export function joineeToProceedToRoom() {
 
-    landingPageContainer.style.display = "none";
-    exitButton.classList.remove("hide")
-    destroyButton.classList.add("hide")
-    roomNameHeadingTag.textContent = `You are in room ${state.getState().roomName}`
-    messages.innerHTML ="Please wait ... connecting via webrtc"
+    landingPageContainer.style.display = "none"; // hides the landing page section
+    roomInterface.classList.remove("hide"); // showing the room interface
+    destroyRoomButton.classList.add("hide");
+    roomNameHeadingTag.textContent = `You are in room ${state.getState().roomName}`;
+    messagesContainer.innerHTML = "pls wait ... connecting via WebRTC";
+
+    // show process buttons for learning purposes only
+    offerorButtonsContainer.classList.remove("hide");
+    offerorButtonsContainer.classList.add("show");
 
 }
 
 
 export function updateCreatorRoom() {
-    destroyButton.classList.add("hide")
-    exitButton.classList.remove("hide")
-    messages.innerHTML ="Please wait ... connecting via webrtc"
+    destroyRoomButton.classList.add('hide');
+    exitButton.classList.remove('hide');
+    messagesContainer.innerHTML = "pls wait ... connecting via WebRTC";
 
 }
 
 export function updateUiForRemainingUser() {
 
-    alert("A User has left the room")
-    state.setOtherUserId(null)
-    messages.innerHTML = "Waiting for peer to join"
+    alert("a user has left your room");
+    state.setOtherUserId(null);
+    messagesContainer.innerHTML = "Waiting for a peer to join.";
 }
+
+
+export function updateUIButton(button,message){
+    button.classList.remove("process_pending");
+    button.classList.add("process_complete");
+    button.setAttribute("disabled", true);
+    logToConsole(message);
+}
+
+export function updateUiOnSuccessfulConnection( ){
+    messageInputContainer.classList.remove("hide");
+    messageInputContainer.classList.add("show");
+    // remove text inside of message container
+    messagesContainer.innerHTML = "";
+
+    // remove the learning buttons for the offeror
+    offerorButtonsContainer.classList.remove("show");
+    offerorButtonsContainer.classList.add("hide");
+    // remove the learning buttons for the offeree
+    offereeButtonsContainer.classList.remove("show");
+    offereeButtonsContainer.classList.add("hide");
+
+    // register keypress event on our input message element
+    messageInputField.addEventListener("keypress", (e) => {
+        if(e.key === "Enter") {
+            sendMessageButton.click();
+        }
+    });
+}
+
+// show offeree's buttons
+export function showOffereeButtons() {
+    offereeButtonsContainer.classList.remove("hide");
+    offereeButtonsContainer.classList.add("show");
+};
+
+
+export function addOutgoingMessageToUi(message) {
+    const userTag = "YOU";
+    const formattedMessage = `${userTag}: ${message}`;
+    const messageElement = document.createElement("div");
+    messageElement.style.color = appconstants.theme.green;
+    messageElement.textContent = formattedMessage;
+    // add our message element to the DOM
+    messagesContainer.appendChild(messageElement);
+    messageInputField.value = "";
+    // ensure the UI scrolls to allow user to always see new incoming and outgoing messages
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+};
+
+export function addIncomingMessageToUi(msg) {
+    const otherUserId = state.getState().otherUserId;
+    const formattedMessage = `${otherUserId}: ${msg}`;
+    const messageElement = document.createElement("div");
+    messageElement.style.color = appconstants.theme.orange;
+    messageElement.textContent = formattedMessage;
+    // add our message element to the DOM
+    messagesContainer.appendChild(messageElement);
+    messageInputField.value = "";
+    // ensure the UI scrolls to allow user to always see new incoming and outgoing messages
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+};

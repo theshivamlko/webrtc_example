@@ -2,6 +2,7 @@ export const theme = {
     red: "#FF8080",
     green: "#9fc53b",
     orange: "#dc9930",
+    blue: "#138bff",
 }
 
 
@@ -24,7 +25,11 @@ export const type = {
     ROOM_EXIT: {
         EXIT: "EXIT_ROOM_REQUEST",
         NOTIFY: "EXIT_ROOM_NOTIFY",
-    }
+    } ,
+    WEBRTC_OFFER: "WEBRTC_OFFER",
+    WEBRTC_ANSWER: "WEBRTC_ANSWER",
+    WEBRTC_ICE_CANDIDATES: "WEBRTC_ICE_CANDIDATES",
+
 }
 
 
