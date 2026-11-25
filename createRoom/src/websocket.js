@@ -232,7 +232,9 @@ function normalServerProcess(data) {
 
 }
 
-function processOffer(data) {
+
+
+function signalMessageToOtherUser(data) {
     const {otherUserId} = data
 
     const message = {
@@ -241,14 +243,20 @@ function processOffer(data) {
     }
 
     sendSocketMessageToUser(otherUserId, message);
-    console.log(`Offer Send to ${otherUserId}`);
+    console.log(`ICE candidates Send to ${otherUserId}`);
 }
 
 function webRTCServerProcess(data) {
 
     switch (data.type) {
         case constants.type.WEBRTC_OFFER:
-            processOffer(data);
+            signalMessageToOtherUser(data);
+            break;
+        case constants.type.WEBRTC_ANSWER:
+            signalMessageToOtherUser(data);
+            break;
+        case constants.type.WEBRTC_ICE_CANDIDATES:
+            signalMessageToOtherUser(data);
             break;
         default:
             console.log(`Unknown type`, data.type);
@@ -268,7 +276,7 @@ function onHandleMessage(message) {
             normalServerProcess(data.data);
             break;
         case constants.labels.WEBRTC_PROCESS:
-            console.log(`=== WEBRTC_PROCESS ===`);
+            console.log(`=== WEBRTC_PROCESS ===`,data.data);
             webRTCServerProcess(data.data);
             break;
         default:

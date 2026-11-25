@@ -168,6 +168,7 @@ function webRTCServerProcessing(data) {
 };
 
 export function sendAnswer(answer) {
+    console.log("sendAnswer: ", answer);
     const message = {
         label: appconstants.labels.WEBRTC_PROCESS,
         data: {
