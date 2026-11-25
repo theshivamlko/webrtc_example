@@ -187,7 +187,7 @@ export function handleAnswer(data) {
     DOM.offerorIceButton.classList.add("show-ice");
 
     DOM.offerorIceButton.addEventListener("click", () => {
-        ws.sendIceCandidates(iceCandidatesGenerated);
+        clientWebsocket.sendIceCandidates(iceCandidatesGenerated);
         // ui changes
         uiUtils.updateUIButton(DOM.offerorIceButton, "Finally, set your remote description");
         // show the setRemoteDescriptionButton
@@ -272,7 +272,7 @@ function createDataChannel(isOfferer) {
     } else {
 
         pc.ondatachannel = (event) => {
-            console.log("The ondatachannel event was emitted for PEER2. Here is the event object: ", e);
+            console.log("The ondatachannel event was emitted for PEER2. Here is the event object: ", event);
             dataChannel = event.channel;
             registerDataChannelListener();
             logToConsole(`Successfully registered a Data channel and added to PC `)

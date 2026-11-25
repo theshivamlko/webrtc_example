@@ -94,7 +94,9 @@ function joinSuccessHandler(data) {
 
 function joinNotificationHandler(data) {
     alert(`User ${data.joinUserId} has joined the room`)
-    state.setOtherUserId(data.creatorId)
+    // The join notification identifies the newly joined peer as joinUserId.
+    // creatorId is only included in the join-success response sent to the joiner.
+    state.setOtherUserId(data.joinUserId)
     logToConsole(data.message, appconstants.theme.green);
     uiUtils.updateCreatorRoom()
 }
