@@ -5,6 +5,7 @@ import {DOM, logToConsole, updateUiOnSuccessfulConnection} from "./uiUtils.js";
 
 let pc = null
 let dataChannel; // we will set this up when we create a peer connection
+let localStream = null;
 const iceCandidatesGenerated = []; // for learning purposes, we will store all ice candidates generated inside of an array
 const iceCandidatesReceivedBuffer = [];
 const webrtcConfig = {
@@ -44,6 +45,15 @@ function registerDataChannelListener() {
 function createPeerConnectionObject() {
     pc = new RTCPeerConnection(webrtcConfig)
 
+    pc.addEventListener("track", (event) => {
+        if (!DOM.remoteVideo.srcObject) {
+            DOM.remoteVideo.srcObject = new MediaStream();
+        }
+        DOM.remoteVideo.srcObject.addTrack(event.track);
+        uiUtils.showVideoUI();
+        logToConsole("Remote video track received", appconstants.theme.green);
+    });
+
     pc.addEventListener("connectionstatechange", () => {
         console.log("connection state changed to: ", pc.connectionState);
         if (pc.connectionState === "connected") {
@@ -69,6 +79,72 @@ function createPeerConnectionObject() {
     });
     return logToConsole(`You have successfully created a PC Object`, null, true, appconstants.theme.green)
 
+}
+
+function waitForIceGatheringComplete() {
+    if (pc.iceGatheringState === "complete") {
+        return Promise.resolve();
+    }
+
+    return new Promise((resolve) => {
+        const onStateChange = () => {
+            if (pc.iceGatheringState === "complete") {
+                pc.removeEventListener("icegatheringstatechange", onStateChange);
+                resolve();
+            }
+        };
+        pc.addEventListener("icegatheringstatechange", onStateChange);
+    });
+}
+
+export async function startVideoCall() {
+    if (!pc) {
+        logToConsole("Create the WebRTC peer connection before starting video", appconstants.theme.red);
+        return;
+    }
+
+    if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
+        const message = "Camera access requires HTTPS (or localhost). Open this app using a secure URL on the mobile browser.";
+        logToConsole(message, appconstants.theme.red);
+        alert(message);
+        return;
+    }
+
+    if (pc.signalingState !== "stable") {
+        logToConsole("Video negotiation is already in progress", appconstants.theme.orange);
+        return;
+    }
+
+    try {
+        const firstNewIceCandidate = iceCandidatesGenerated.length;
+
+        if (!localStream) {
+            localStream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
+            DOM.localVideo.srcObject = localStream;
+            localStream.getTracks().forEach((track) => pc.addTrack(track, localStream));
+        }
+
+        uiUtils.showVideoUI();
+        DOM.startVideoCallButton.disabled = true;
+        DOM.startVideoCallButton.textContent = "Video Call Started";
+
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        await waitForIceGatheringComplete();
+        clientWebsocket.sendOffer(pc.localDescription, true);
+        logToConsole("Video offer sent. Waiting for the other peer...", appconstants.theme.green);
+
+        const newCandidates = iceCandidatesGenerated.slice(firstNewIceCandidate);
+        if (newCandidates.length > 0) clientWebsocket.sendIceCandidates(newCandidates);
+    } catch (error) {
+        console.error("Unable to start video call", error);
+        const message = error.name === "NotAllowedError"
+            ? "Camera or microphone permission was denied. Allow access in the browser settings and try again."
+            : `Unable to start video call: ${error.message}`;
+        logToConsole(message, appconstants.theme.red);
+        alert(message);
+        DOM.startVideoCallButton.disabled = false;
+    }
 }
 
 export function startWebRTCProcess() {
@@ -119,6 +195,11 @@ export function startWebRTCProcess() {
 }
 
 export function handleOffer(data) {
+    if (data.isVideoOffer) {
+        handleVideoOffer(data);
+        return;
+    }
+
     let answer;
 
     uiUtils.logToConsole("WebRTC offer 📨 received. Create your peer connection object");
@@ -180,7 +261,36 @@ export function handleOffer(data) {
     });
 }; // end of the handleOffer function
 
+async function handleVideoOffer(data) {
+    try {
+        if (!pc) createPeerConnectionObject();
+
+        logToConsole("Remote video received. Tap Start Video Call to share your camera too.", appconstants.theme.orange);
+
+        const firstNewIceCandidate = iceCandidatesGenerated.length;
+        await pc.setRemoteDescription(data.offer);
+        const answer = await pc.createAnswer();
+        await pc.setLocalDescription(answer);
+        await waitForIceGatheringComplete();
+
+        uiUtils.showVideoUI();
+        clientWebsocket.sendAnswer(pc.localDescription, true);
+        logToConsole("Video offer received. Video answer sent.", appconstants.theme.green);
+
+        const newCandidates = iceCandidatesGenerated.slice(firstNewIceCandidate);
+        if (newCandidates.length > 0) clientWebsocket.sendIceCandidates(newCandidates);
+    } catch (error) {
+        console.error("Unable to accept video offer", error);
+        logToConsole(`Unable to accept video offer: ${error.message}`, appconstants.theme.red);
+    }
+}
+
 export function handleAnswer(data) {
+    if (data.isVideoAnswer) {
+        handleVideoAnswer(data);
+        return;
+    }
+
     uiUtils.logToConsole("answer received. Send your ice candidates to PEER2");
     // show the ice button
     DOM.offerorIceButton.classList.remove("hide");
@@ -210,6 +320,16 @@ export function handleAnswer(data) {
 
 
 };
+
+async function handleVideoAnswer(data) {
+    try {
+        await pc.setRemoteDescription(data.answer);
+        logToConsole("Video answer received. Video connection is ready.", appconstants.theme.green);
+    } catch (error) {
+        console.error("Unable to accept video answer", error);
+        logToConsole(`Unable to accept video answer: ${error.message}`, appconstants.theme.red);
+    }
+}
 export function handleIceCandidates(data) {
     if(pc.remoteDescription) {
         try {

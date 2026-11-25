@@ -86,3 +86,7 @@ uiUtils.DOM.sendMessageButton.addEventListener("click", () => {
         webRTCHandler.sendMessageUsingDataChannel(message);
     };
 });
+
+uiUtils.DOM.startVideoCallButton.addEventListener("click", async () => {
+    await webRTCHandler.startVideoCall();
+});

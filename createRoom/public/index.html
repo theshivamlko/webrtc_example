@@ -51,6 +51,13 @@
             <input type="text" id="message_input_field" placeholder="Type a message..." />
             <button id="send_message_button">Send</button>
         </div>
+        <div id="video_call_controls">
+            <button id="start_video_call_button">Start Video Call</button>
+        </div>
+        <div id="video_container" class="hide">
+            <video id="local_video" autoplay muted playsinline></video>
+            <video id="remote_video" autoplay playsinline></video>
+        </div>
         <br>
 
         <!-- BUTTONS FOR LEARNING PURPOSES ONLY  -->

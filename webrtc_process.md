@@ -3,6 +3,10 @@
 
 This document outlines the steps required to establish a WebRTC connection between two clients (PEER1 and PEER2) using signaling via a Node.js WebSocket server.
 
+``
+ npm run dev   
+``
+
 ## Stage 1: 🙍‍♂️ PEER1 Sets Up WebRTC and Sends Offer
 - **Role**: You can refer to PEER1 as the Initiator/Caller/Offeror. These steps involve the user and their browser preparing to establish a WebRTC connection.
 

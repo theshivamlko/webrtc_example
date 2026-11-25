@@ -18,6 +18,10 @@ const messagesContainer = document.getElementById('messages');
 const messageInputField = document.getElementById('message_input_field');
 const messageInputContainer = document.getElementById('message_input');
 const sendMessageButton = document.getElementById('send_message_button');
+const startVideoCallButton = document.getElementById('start_video_call_button');
+const videoContainer = document.getElementById('video_container');
+const localVideo = document.getElementById('local_video');
+const remoteVideo = document.getElementById('remote_video');
 const destroyRoomButton = document.getElementById('destroy_button');
 const exitButton = document.getElementById('exit_button');
 
@@ -56,6 +60,10 @@ export const DOM = {
     messageInputField,
     messageInputContainer,
     sendMessageButton,
+    startVideoCallButton,
+    videoContainer,
+    localVideo,
+    remoteVideo,
     destroyRoomButton,
     exitButton,
 
@@ -216,6 +224,11 @@ export function updateUiOnSuccessfulConnection( ){
             sendMessageButton.click();
         }
     });
+}
+
+export function showVideoUI() {
+    videoContainer.classList.remove("hide");
+    videoContainer.classList.add("show");
 }
 
 // show offeree's buttons

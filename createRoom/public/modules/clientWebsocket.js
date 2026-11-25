@@ -134,12 +134,13 @@ function normalServerProcessing(data) {
     }
 }
 
-export function sendOffer(offer) {
+export function sendOffer(offer, isVideoOffer = false) {
     const message = {
         label: appconstants.labels.WEBRTC_PROCESS,
         data: {
             type: appconstants.type.WEBRTC_OFFER,
             offer,
+            isVideoOffer,
             otherUserId: state.getState().otherUserId
         }
     };
@@ -169,13 +170,14 @@ function webRTCServerProcessing(data) {
     }
 };
 
-export function sendAnswer(answer) {
+export function sendAnswer(answer, isVideoAnswer = false) {
     console.log("sendAnswer: ", answer);
     const message = {
         label: appconstants.labels.WEBRTC_PROCESS,
         data: {
             type: appconstants.type.WEBRTC_ANSWER,
             answer,
+            isVideoAnswer,
             otherUserId: state.getState().otherUserId
         }
     };
