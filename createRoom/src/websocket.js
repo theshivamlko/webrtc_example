@@ -232,16 +232,44 @@ function normalServerProcess(data) {
 
 }
 
+function processOffer(data) {
+    const {otherUserId} = data
+
+    const message = {
+        label: constants.labels.WEBRTC_PROCESS,
+        data:data
+    }
+
+    sendSocketMessageToUser(otherUserId, message);
+    console.log(`Offer Send to ${otherUserId}`);
+}
+
+function webRTCServerProcess(data) {
+
+    switch (data.type) {
+        case constants.type.WEBRTC_OFFER:
+            processOffer(data);
+            break;
+        default:
+            console.log(`Unknown type`, data.type);
+
+
+    }
+}
+
 function onHandleMessage(message) {
 
     const data = JSON.parse(message.toString());
 
-    console.log(`onHandleMessage ${constants.labels.NORMAL_SERVER_PROCESS}`);
     console.log(`onHandleMessage ${data.label}`);
     switch (data.label) {
         case constants.labels.NORMAL_SERVER_PROCESS:
             console.log(`=== Server Message ===`);
             normalServerProcess(data.data);
+            break;
+        case constants.labels.WEBRTC_PROCESS:
+            console.log(`=== WEBRTC_PROCESS ===`);
+            webRTCServerProcess(data.data);
             break;
         default:
             console.log(`Unknown message`, data.data);

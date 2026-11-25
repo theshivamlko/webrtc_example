@@ -12,9 +12,11 @@ function onHandleMessage(incomingData) {
 
     switch (msg.label) {
         case appconstants.labels.NORMAL_SERVER_PROCESS:
+            console.log(`Normal server message`);
             normalServerProcessing(msg.data)
             break;
         case appconstants.labels.WEBRTC_PROCESS:
+            console.log(`Processing signaling server message`);
             webRTCServerProcessing(msg.data);
             break;
         default:
