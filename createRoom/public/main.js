@@ -81,7 +81,7 @@ uiUtils.DOM.sendMessageButton.addEventListener("click", () => {
     const message = uiUtils.DOM.messageInputField.value.trim();
     if(message) {
         // step 1: add the message to the user's UI
-        addOutgoingMessageToUi(message);
+        uiUtils.addOutgoingMessageToUi(message);
         // step 2: sending the message to the other peer
         webRTCHandler.sendMessageUsingDataChannel(message);
     };

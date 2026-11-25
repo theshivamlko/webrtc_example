@@ -238,11 +238,11 @@ export function sendMessageUsingDataChannel(message) {
 export function closePeerConnection() {
 
     // step 1 (optional): close a data channel if it exists
-    // if(dataChannel) {
-    //     dataChannel.close();
-    //     dataChannel = null;
-    //     console.log("data channel closed");
-    // }
+    if(dataChannel) {
+        dataChannel.close();
+        dataChannel = null;
+        console.log("data channel closed");
+    }
 
     // step 2: close the pc if it exists
     if(pc) {
